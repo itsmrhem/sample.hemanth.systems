@@ -36,7 +36,6 @@ async function sendLoginEmail( email: string, ip: string) {
 export async function POST(request: NextRequest) {
   const { email, password } = await request.json();
   const ip = (request.headers.get('x-forwarded-for') ?? '152.59.194.253').split(',')[0]
-  const ip1 = "152.59.194.253"
   console.log(ip)
   try { 
     const userResult = await queryDatabase(
@@ -48,7 +47,7 @@ export async function POST(request: NextRequest) {
   console.log("USER", user[0].email);
   console.log("USER", user[0].password);
   if (user[0].email === email && user[0].password === password) {
-    sendLoginEmail(email, ip1);
+    sendLoginEmail(email, ip);
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
       throw new Error("JWT secret is not defined.");
