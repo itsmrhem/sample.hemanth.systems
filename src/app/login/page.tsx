@@ -31,6 +31,7 @@ export default function Login() {
             }
         } catch (error) {
             setErrorMessage('An error occurred');
+            console.log(error)
             setIsProcessing(false);
         }
     };

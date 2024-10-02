@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { queryDatabase } from "@/app/service/database";
 import { cookies } from "next/headers";
-import requestIp from "request-ip";
-import { CallTracker } from "assert";
 
 const { EmailClient } = require("@azure/communication-email");
 
@@ -26,7 +24,7 @@ async function sendLoginEmail(ip: string, email: string) {
         }
     };
     const poller = await client.beginSend(message);
-    const result = await poller.pollUntilDone();
+    await poller.pollUntilDone();
 }
 
 export async function POST(request: NextRequest) {

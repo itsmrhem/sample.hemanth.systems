@@ -50,8 +50,8 @@ export async function POST(request: NextRequest) {
         }
         const cookieStore = cookies();
         const jwtToken = cookieStore.get("session");
-        var jwt = require('jsonwebtoken');
-        var decoded = jwt.verify(jwtToken?.value, process.env.JWT_SECRET);
+        const jwt = require('jsonwebtoken');
+        const decoded = jwt.verify(jwtToken?.value, process.env.JWT_SECRET);
         const email = decoded.email;
         console.log('Email:', email);
         const body = `Thank you for your payment of ${paymentData.amount} for ${paymentData.productinfo}. Your payment reference number is ${paymentData.txnid}. Bank refernce number is ${paymentData.bank_ref_num}. Your payment gateway is ${paymentData.payment_source}.`;

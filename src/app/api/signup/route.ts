@@ -31,7 +31,7 @@ async function sendEmail(email: string, subject: string, body: string) {
 async function sendWhatsapp(number: string, otp: string) {
     const auth = process.env.INFOBIP_AUTHORIZATION;
     console.log(auth);
-    var settings = {
+    const settings = {
         "url": "https://ejnrrn.api.infobip.com/whatsapp/1/message/template",
         "method": "POST",
         "timeout": 0,
@@ -78,11 +78,6 @@ async function sendWhatsapp(number: string, otp: string) {
     const query = "SELECT * FROM credentials WHERE email = ?";
     const resultUnparsed = await queryDatabase(query, [email]);
     const result = JSON.parse(resultUnparsed);
-    try { 
-        const dbEmail = result[0].email;
-    } catch(error) { 
-        return false;
-    }
     if (result[0].email === email) {
         return true;
     }
@@ -111,8 +106,8 @@ export async function POST(request: NextRequest) {
         sendEmail(email, String(otp), `Hello ${firstName} ${lastName}, Welcome to Sample App!`);
         sendWhatsapp(body.number, String(otp));
         await dbInteraction(email, firstName, lastName, body.password, String(otp));
-        var jwt = require('jsonwebtoken');
-        var token = jwt.sign({ email: email }, process.env.JWT_SECRET);
+        const jwt = require('jsonwebtoken');
+        const token = jwt.sign({ email: email }, process.env.JWT_SECRET);
         console.log(token);
         cookies().set('verification', token);
         return NextResponse.json({ message: "Signup successful"}, {status: 200 });

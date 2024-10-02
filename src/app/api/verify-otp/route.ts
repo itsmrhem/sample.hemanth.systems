@@ -16,8 +16,8 @@ export async function POST(request: NextRequest) {
     console.log("JWT token found");
     const jwtToken = cookieStore.get("verification");
     console.log(jwtToken);
-    var jwt = require('jsonwebtoken');
-    var decoded = jwt.verify(jwtToken?.value, process.env.JWT_SECRET);
+    const jwt = require('jsonwebtoken');
+    const decoded = jwt.verify(jwtToken?.value, process.env.JWT_SECRET);
     console.log(decoded);
 
     const email = decoded.email;
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
             console.log("OTP verified");
             cookies().delete("verification");
             return NextResponse.json({ message: "OTP verified"}, {status: 200 });
-        } else if ((user as any).isVerified === 1) {
+        } else if (user.isVerified === 1) {
             console.log("User already verified");
             return NextResponse.json({ message: "User already verified"}, {status: 400 });
         } else {
