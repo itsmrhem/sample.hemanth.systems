@@ -61,6 +61,6 @@ export async function POST(request: NextRequest) {
 
   } catch (e) {
     console.error(e);
-    return NextResponse.json({ message: e }, { status: 401 });
+    return NextResponse.json({ message: "User not found" }, { status: 401 });
   }
 }

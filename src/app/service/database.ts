@@ -4,7 +4,10 @@ const pool = mysql.createPool({
     host: "sample-next-app.mysql.database.azure.com", 
     user: "hemanth",
     password: "vivoy55L@123%",
-    database: 'creds', 
+    database: 'creds',
+    ssl: {
+        rejectUnauthorized: false, 
+    }
 });
 
 export async function queryDatabase(query: string, values: unknown[] = []) {
