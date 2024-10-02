@@ -5,14 +5,8 @@ import crypto from "crypto";
 
 declare global {
     interface Window {
-        Razorpay: RazorpayInstance;
+        Razorpay: any;
     }
-}
-interface RazorpayInstance {
-    new (options: any): RazorpayInstance;
-    open: () => void;
-    on: (event: string, callback: (response: any) => void) => void;
-    [key: string]: any; 
 }
 
 const paymentPage = () => {
@@ -139,12 +133,8 @@ const paymentPage = () => {
                 },
             };
             console.log("Options: ", options);
-            if (window.Razorpay) {
-                const rzp1 = new window.Razorpay(options);
-                rzp1.open();
-            } else {
-                console.error('Razorpay is not available');
-            }
+            const rzp1 = new window.Razorpay(options);
+            rzp1.open();
         } catch(error) {
             console.log("Error while creating rz order.(/route.ts)", error);
             console.log(error);
