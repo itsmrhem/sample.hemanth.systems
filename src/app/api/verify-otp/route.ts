@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import {cookies } from "next/headers";
-
+import jwt from "jsonwebtoken";
 import { queryDatabase } from "@/app/service/database";
 
 
@@ -16,10 +16,17 @@ export async function POST(request: NextRequest) {
     console.log("JWT token found");
     const jwtToken = cookieStore.get("verification");
     console.log(jwtToken);
-    const jwt = require('jsonwebtoken');
-    const decoded = jwt.verify(jwtToken?.value, process.env.JWT_SECRET);
-    console.log(decoded);
 
+    if (!jwtToken?.value) {
+        return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+    }
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+        return NextResponse.json({ message: "Server error" }, { status: 500 });
+    }
+    const decoded = jwt.verify(jwtToken.value, secret) as jwt.JwtPayload;
+    console.log(decoded);
+    
     const email = decoded.email;
     const query = "SELECT * FROM credentials WHERE email = ?";
     const resultString = await queryDatabase(query, [email]);

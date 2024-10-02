@@ -5,10 +5,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { queryDatabase } from "@/app/service/database";
 import { cookies } from "next/headers";
 
-const { EmailClient } = require("@azure/communication-email");
+import { EmailClient } from "@azure/communication-email";
+import jwt from 'jsonwebtoken';
 
 async function sendEmail(email: string, subject: string, body: string) {
     const connectionString = process.env.AZURE_COMMUNICATION_EMAIL_CONNECTION_STRING;
+    if (!connectionString) {
+        throw new Error("Azure Communication Email connection string is not defined.");
+    }
     const client = new EmailClient(connectionString);
     const from = "DoNotReply@sample.hemanth.systems";
     const to = email;
@@ -106,8 +110,11 @@ export async function POST(request: NextRequest) {
         sendEmail(email, String(otp), `Hello ${firstName} ${lastName}, Welcome to Sample App!`);
         sendWhatsapp(body.number, String(otp));
         await dbInteraction(email, firstName, lastName, body.password, String(otp));
-        const jwt = require('jsonwebtoken');
-        const token = jwt.sign({ email: email }, process.env.JWT_SECRET);
+        const jwtSecret = process.env.JWT_SECRET;
+        if (!jwtSecret) {
+            throw new Error("JWT secret is not defined.");
+        }
+        const token = jwt.sign({ email: email }, jwtSecret);
         console.log(token);
         cookies().set('verification', token);
         return NextResponse.json({ message: "Signup successful"}, {status: 200 });

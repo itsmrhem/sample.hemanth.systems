@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
         if (!jwtSecret) {
             throw new Error("JWT secret is not defined.");
         }
-        var decoded = jwt.verify(jwtToken?.value, jwtSecret) as jwt.JwtPayload;
+         const decoded = jwt.verify(jwtToken?.value, jwtSecret) as jwt.JwtPayload;
         const email = (decoded as jwt.JwtPayload).email;
         console.log('Email:', email);
         const body = `Thank you for your payment of 100 for ${payment.description}. Your payment reference number is ${payment.id}. Order ID: ${payment.order_id}. Payment method: ${payment.method}.UPI ID: ${payment.vpa}. Your payment gateway is razorpay.`;
