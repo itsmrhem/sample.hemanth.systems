@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken';
 
 
 
-async function sendLoginEmail( email: string, ip: string) {
+async function sendLoginEmail( email: string, ip: string, city: string, country: string) {
   const connectionString = process.env.AZURE_COMMUNICATION_EMAIL_CONNECTION_STRING;
   if (!connectionString) {
     throw new Error("Azure Communication Email connection string is not defined.");
@@ -20,7 +20,7 @@ async function sendLoginEmail( email: string, ip: string) {
         senderAddress: from,
         content: {
             subject: "Login Alert",
-            plainText: `Your account was logged into from ${ip}}`,
+            plainText: `Your account was logged into from the IP address ${ip} in ${city}, ${country}. Go to https://ipinfo.io/${ip} to see more details of hte IP address.`,
         },
         recipients: {
             to: [{address: to}],
@@ -36,10 +36,6 @@ export async function POST(request: NextRequest) {
   const ip = (request.headers.get('x-forwarded-for') ?? '152.59.194.253').split(',')[0];
   const city = (request.headers.get('x-vercel-ip-city') ?? 'Vijayawada');
   const country = (request.headers.get('x-vercel-ip-country') ?? 'India');
-  const cookieStore = cookies();
-  cookieStore.set('ip', ip, { path: '/' });
-  cookieStore.set('city', city, { path: '/' });
-  cookieStore.set('country', country, { path: '/' });
   console.log(ip)
   try { 
     const userResult = await queryDatabase(
@@ -51,7 +47,7 @@ export async function POST(request: NextRequest) {
   console.log("USER", user[0].email);
   console.log("USER", user[0].password);
   if (user[0].email === email && user[0].password === password) {
-    sendLoginEmail(email, ip);
+    sendLoginEmail(email, ip, city, country);
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
       throw new Error("JWT secret is not defined.");
