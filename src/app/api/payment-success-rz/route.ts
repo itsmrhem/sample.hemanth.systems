@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-const { EmailClient } = require("@azure/communication-email");
+import { EmailClient } from '@azure/communication-email';
+import jwt from 'jsonwebtoken';
 import Razorpay from "razorpay";
 
 
 async function sendEmail(email: string, subject: string, body: string) {
   const connectionString = process.env.AZURE_COMMUNICATION_EMAIL_CONNECTION_STRING;
+  if (!connectionString) {
+    throw new Error("Azure Communication Email connection string is not defined.");
+  }
   const client = new EmailClient(connectionString);
   const from = "DoNotReply@sample.hemanth.systems";
   const to = email;
@@ -48,9 +52,15 @@ export async function POST(request: NextRequest) {
         }
         const cookieStore = cookies();
         const jwtToken = cookieStore.get("session");
-        var jwt = require('jsonwebtoken');
-        var decoded = jwt.verify(jwtToken?.value, process.env.JWT_SECRET);
-        const email = decoded.email;
+        if (!jwtToken) {
+            throw new Error("JWT token is not defined.");
+        }
+        const jwtSecret = process.env.JWT_SECRET;
+        if (!jwtSecret) {
+            throw new Error("JWT secret is not defined.");
+        }
+        var decoded = jwt.verify(jwtToken?.value, jwtSecret) as jwt.JwtPayload;
+        const email = (decoded as jwt.JwtPayload).email;
         console.log('Email:', email);
         const body = `Thank you for your payment of 100 for ${payment.description}. Your payment reference number is ${payment.id}. Order ID: ${payment.order_id}. Payment method: ${payment.method}.UPI ID: ${payment.vpa}. Your payment gateway is razorpay.`;
         sendEmail(email, 'Payment Success', body);

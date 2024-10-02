@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-const { EmailClient } = require("@azure/communication-email");
+import { EmailClient } from '@azure/communication-email';
+import jwt from 'jsonwebtoken';
 
 async function sendEmail(email: string, subject: string, body: string) {
   const connectionString = process.env.AZURE_COMMUNICATION_EMAIL_CONNECTION_STRING;
+  if (!connectionString) {
+    throw new Error("Azure Communication Email connection string is not defined.");
+  }
   const client = new EmailClient(connectionString);
   const from = "DoNotReply@sample.hemanth.systems";
   const to = email;
@@ -50,9 +54,20 @@ export async function POST(request: NextRequest) {
         }
         const cookieStore = cookies();
         const jwtToken = cookieStore.get("session");
-        const jwt = require('jsonwebtoken');
-        const decoded = jwt.verify(jwtToken?.value, process.env.JWT_SECRET);
-        const email = decoded.email;
+        if (!jwtToken) {
+            throw new Error("JWT token is not defined.");
+        }
+        const jwtSecret = process.env.JWT_SECRET;
+        if (!jwtSecret) {
+            throw new Error("JWT secret is not defined.");
+        }
+        const decoded = jwt.verify(jwtToken.value, jwtSecret);
+        let email: string;
+        if (typeof decoded !== 'string' && 'email' in decoded) {
+            email = decoded.email as string;
+        } else {
+            throw new Error("Decoded token does not contain an email.");
+        }
         console.log('Email:', email);
         const body = `Thank you for your payment of ${paymentData.amount} for ${paymentData.productinfo}. Your payment reference number is ${paymentData.txnid}. Bank refernce number is ${paymentData.bank_ref_num}. Your payment gateway is ${paymentData.payment_source}.`;
         sendEmail(email, 'Payment Success', body);
