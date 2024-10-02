@@ -5,8 +5,14 @@ import crypto from "crypto";
 
 declare global {
     interface Window {
-        Razorpay: any;
+        Razorpay: RazorpayInstance;
     }
+}
+interface RazorpayInstance {
+    new (options: any): RazorpayInstance;
+    open: () => void;
+    on: (event: string, callback: (response: any) => void) => void;
+    [key: string]: any; 
 }
 
 const paymentPage = () => {
