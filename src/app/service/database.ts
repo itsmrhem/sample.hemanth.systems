@@ -1,9 +1,9 @@
 import mysql from 'mysql2/promise';
 
 const pool = mysql.createPool({
-    host: process.env.AZURE_MYSQL_DB_URL, 
-    user: process.env.AZURE_MYSQL_DB_USER,
-    password: process.env.AZURE_MYSQL_DB_PASSWORD,
+    host: "sample-next-app.mysql.database.azure.com", 
+    user: "hemanth",
+    password: "vivoy55L@123%",
     database: 'creds', 
 });
 
