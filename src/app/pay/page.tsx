@@ -70,8 +70,8 @@ const paymentPage = () => {
         const amount = "100"; 
         const firstname = "Hemanth"; 
         const lastname = "Marupudi"; 
-        const surl = "https://sample-hemanth-systems-3hkj.vercel.app/api/payment-success";
-        const furl = "https://sample-hemanth-systems-3hkj.vercel.app/api/payment-failure";
+        const surl = "https://sample.hemanth.systems/api/payment-success";
+        const furl = "https://sample.hemanth.systems/api/payment-failure";
         const phone = "9988776655"; 
         const hash = generateHash(key, txnid, amount, productinfo, firstname); 
         console.log(key, process.env.NEXT_PUBLIC_PAYU_SALT!);
@@ -127,7 +127,7 @@ const paymentPage = () => {
                 name: "Sample App",
                 order_id: data.orderId,
                 description: "Payment for Sample App",
-                callback_url: "https://sample-hemanth-systems-3hkj.vercel.app/api/payment-success-rz",
+                callback_url: "https://sample.hemanth.systems/api/payment-success-rz",
                 theme: {
                     color: "#3a88fe",
                 },
