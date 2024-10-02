@@ -2,10 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { queryDatabase } from "@/app/service/database";
 import { cookies } from "next/headers";
 
-const { EmailClient } = require("@azure/communication-email");
+import { EmailClient } from "@azure/communication-email";
+import jwt from 'jsonwebtoken';
+
+
 
 async function sendLoginEmail(ip: string, email: string) {
   const connectionString = process.env.AZURE_COMMUNICATION_EMAIL_CONNECTION_STRING;
+  if (!connectionString) {
+    throw new Error("Azure Communication Email connection string is not defined.");
+  }
   const client = new EmailClient(connectionString);
   const ipinfo = await fetch(`https://ipinfo.io/${ip}/json?token=${process.env.IPINFO_TOKEN}`);
   const ipinfoData = await ipinfo.json();
@@ -42,8 +48,11 @@ export async function POST(request: NextRequest) {
   console.log("USER", user[0].password);
   if (user[0].email === email && user[0].password === password) {
     sendLoginEmail(ip, email);
-    const jwt = require('jsonwebtoken');
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      throw new Error("JWT secret is not defined.");
+    }
+    const token = jwt.sign({ email }, jwtSecret, { expiresIn: '1h' });
     const cookieStore = cookies();
     cookieStore.set('session', token, { path: '/' });
     return NextResponse.json({ message: "Logged in" }, { status: 200 });
