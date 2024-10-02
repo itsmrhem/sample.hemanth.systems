@@ -37,6 +37,7 @@ export default function Otpverify() {
             }
         } catch (error) {
             alert('An error occurred');
+            console.log(error);
         }
     };
 

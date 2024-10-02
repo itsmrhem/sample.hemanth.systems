@@ -7,7 +7,7 @@ const pool = mysql.createPool({
     database: 'creds', 
 });
 
-export async function queryDatabase(query: string, values: any[] = []) {
+export async function queryDatabase(query: string, values: unknown[] = []) {
     const [rows] = await pool.execute(query, values);
     const json = JSON.stringify(rows);
     return json;

@@ -67,7 +67,7 @@ export default function Signup() {
       <div className="max-w-4xl mx-auto font-[sans-serif] p-6">
       <div className="text-center mb-16">
         <h4 className="text-gray-800 text-3xl font-semibold mt-100">Sign up</h4>
-        <h4 className="text-gray-800 text-base font-light">I understand how important your privacy is. Your number is NOT STORED in the database, it's only asked to test the functionality of the Whatsapp API. However, your email ID is STORED and will STRICTLY be used for transactional purposes only. Any data you share will be deleted within 12 hours after sending a request to root@hemanth.systems.</h4>
+        <h4 className="text-gray-800 text-base font-light">I understand how important your privacy is. Your number is NOT STORED in the database, it&apos;s only asked to test the functionality of the Whatsapp API. However, your email ID is STORED and will STRICTLY be used for transactional purposes only. Any data you share will be deleted within 12 hours after sending a request to root@hemanth.systems.</h4>
       </div>
 
       <form onSubmit={handleSubmit} method="POST">
