@@ -30,12 +30,15 @@ async function sendLoginEmail( email: string, ip: string) {
         }
     };
     const poller = await client.beginSend(message);
-    await poller.pollUntilDone();
+    const finalize = await poller.pollUntilDone();
+    console.log("Email result: ", finalize);
 }
 
 export async function POST(request: NextRequest) {
   const { email, password } = await request.json();
-  const ip = (request.headers.get('x-forwarded-for') ?? '152.59.194.253').split(',')[0]
+  const ip = (request.headers.get('x-forwarded-host') ?? '152.59.194.253').split(',')[0];
+  const cookieStore = cookies();
+  cookieStore.set('ip', ip, { path: '/' });
   console.log(ip)
   try { 
     const userResult = await queryDatabase(
