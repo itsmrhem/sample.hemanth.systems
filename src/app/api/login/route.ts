@@ -23,7 +23,7 @@ async function sendLoginEmail( email: string, ip: string) {
         senderAddress: from,
         content: {
             subject: "Login Alert",
-            plainText: `Your account was logged into `,
+            plainText: `Your account was logged into from ${ip} and details are ${JSON.stringify(ipinfoData)}`,
         },
         recipients: {
             to: [{address: to}],
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
   console.log("USER", user[0].email);
   console.log("USER", user[0].password);
   if (user[0].email === email && user[0].password === password) {
-    sendLoginEmail(ip,email);
+    sendLoginEmail(email, ip);
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
       throw new Error("JWT secret is not defined.");

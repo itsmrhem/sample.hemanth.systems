@@ -79,13 +79,18 @@ async function sendWhatsapp(number: string, otp: string) {
 }
 
     async function isEmailRegistered(email: string): Promise<boolean> {
-    const query = "SELECT * FROM credentials WHERE email = ?";
-    const resultUnparsed = await queryDatabase(query, [email]);
-    const result = JSON.parse(resultUnparsed);
-    if (result[0].email === email) {
-        return true;
+    try {
+        const query = "SELECT * FROM credentials WHERE email = ?";
+        const resultUnparsed = await queryDatabase(query, [email]);
+        const result = JSON.parse(resultUnparsed);
+        if (result[0].email === email) {
+            return true;
+        }
+        return false;
+    } catch (error) {
+        console.error(error);
+        return false;
     }
-    return false;
     
 }
 
