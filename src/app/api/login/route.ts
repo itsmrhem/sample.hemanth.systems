@@ -12,7 +12,7 @@ async function sendTestLoginEamil(email: string, ip: string) {
   if (!connectionString) {
     throw new Error("Azure Communication Email connection string is not defined.");
   }
-  const client = new EmailClient(connectionString);
+  
   let body = "Your account was logged into from the IP address " + ip + ". Go to https://ipinfo.io/" + ip + " to see more details of the IP address.";
   try {
     const ipinfoToken = process.env.IPINFO_TOKEN;
@@ -34,11 +34,11 @@ async function sendTestLoginEamil(email: string, ip: string) {
   } catch (e) {
     console.error(e);
   }
-  const from = "DoNotReply@sample.hemanth.systems";
+  const client = new EmailClient(connectionString);
     const to = email;
     console.log("Sending email to: ", to);
     const message = {
-        senderAddress: from,
+        senderAddress: "DoNotReply@sample.hemanth.systems",
         content: {
             subject: "Login Alert",
             plainText: body,
