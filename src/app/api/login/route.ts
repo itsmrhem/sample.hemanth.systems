@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { queryDatabase } from "@/app/service/database";
 import { cookies } from "next/headers";
-import IPinfoWrapper, { IPinfo, AsnResponse } from "node-ipinfo";
+import IPinfoWrapper from "node-ipinfo";
 
 import { EmailClient } from "@azure/communication-email";
 import jwt from 'jsonwebtoken';
