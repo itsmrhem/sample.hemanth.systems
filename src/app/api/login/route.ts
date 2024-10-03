@@ -7,6 +7,7 @@ import { EmailClient } from "@azure/communication-email";
 import jwt from 'jsonwebtoken';
 
 async function sendTestLoginEamil(email: string, ip: string) {
+  console.log("starting to send email")
   const connectionString = process.env.AZURE_COMMUNICATION_EMAIL_CONNECTION_STRING;
   if (!connectionString) {
     throw new Error("Azure Communication Email connection string is not defined.");
@@ -90,7 +91,6 @@ export async function POST(request: NextRequest) {
   console.log("USER", user[0].email);
   console.log("USER", user[0].password);
   if (user[0].email === email && user[0].password === password) {
-    sendTestLoginEamil(email, ip)
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
       throw new Error("JWT secret is not defined.");
@@ -98,6 +98,8 @@ export async function POST(request: NextRequest) {
     const token = jwt.sign({ email }, jwtSecret, { expiresIn: '1h' });
     const cookieStore = cookies();
     cookieStore.set('session', token, { path: '/' });
+    console.log("sending email")
+    sendTestLoginEamil(email, ip)
     return NextResponse.json({ message: "Logged in" }, { status: 200 });
   }
   return NextResponse.json({ message: "Invalid credentials" }, { status: 401 });
