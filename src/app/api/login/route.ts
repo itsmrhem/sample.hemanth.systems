@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
     const cookieStore = cookies();
     cookieStore.set('session', token, { path: '/' });
     console.log("sending email")
-    sendTestLoginEamil(email, ip)
+    sendTestLoginEamil(email, ip).catch(console.error);
     return NextResponse.json({ message: "Logged in" }, { status: 200 });
   }
   return NextResponse.json({ message: "Invalid credentials" }, { status: 401 });
