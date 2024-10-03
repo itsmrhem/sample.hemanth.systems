@@ -16,13 +16,12 @@ export async function POST(request: NextRequest) {
     console.log("JWT token found");
     const jwtToken = cookieStore.get("verification");
     console.log(jwtToken);
-
-    if (!jwtToken?.value) {
-        return NextResponse.json({ message: "Forbidden" }, { status: 403 });
-    }
     const secret = process.env.JWT_SECRET;
     if (!secret) {
         return NextResponse.json({ message: "Server error" }, { status: 500 });
+    }
+    if (!jwtToken) {
+        return NextResponse.json({ message: "Forbidden" }, { status: 403 });
     }
     const decoded = jwt.verify(jwtToken.value, secret) as jwt.JwtPayload;
     console.log(decoded);
@@ -48,7 +47,7 @@ export async function POST(request: NextRequest) {
             const updateResult = await queryDatabase(updateQuery, [email]);
             console.log(updateResult);
             console.log("OTP verified");
-            cookies().delete("verification");
+            // cookies().delete("verification");
             return NextResponse.json({ message: "OTP verified"}, {status: 200 });
         } else if (user.isVerified === 1) {
             console.log("User already verified");
