@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
         }
         console.log('Email:', email);
         const body = `Thank you for your payment of ${paymentData.amount} for ${paymentData.productinfo}. Your payment reference number is ${paymentData.txnid}. Bank refernce number is ${paymentData.bank_ref_num}. Your payment gateway is ${paymentData.payment_source}.`;
-        sendEmail(email, 'Payment Success', body);
+        await sendEmail(email, 'Payment Success', body);
         return NextResponse.redirect(new URL('/thank-you', request.url), 303);
 
     } catch (error) {

@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
         const email = (decoded as jwt.JwtPayload).email;
         console.log('Email:', email);
         const body = `Thank you for your payment of 100 for ${payment.description}. Your payment reference number is ${payment.id}. Order ID: ${payment.order_id}. Payment method: ${payment.method}.UPI ID: ${payment.vpa}. Your payment gateway is razorpay.`;
-        sendEmail(email, 'Payment Success', body);
+        await sendEmail(email, 'Payment Success', body);
         return NextResponse.redirect(new URL('/thank-you', request.url), 303);
     } catch (error) {
         console.error('Error processing payment response:', error);
