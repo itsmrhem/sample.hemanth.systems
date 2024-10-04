@@ -48,19 +48,16 @@ async function sendWhatsapp(number: string, otp: string) {
                     "from": "12366137019",
                     "to":  number,
                     "content": {
-                        "templateName": "otp_sending",
+                        "templateName": "verif_sending_1",
                         "templateData": {
                             "body": {
                                 "placeholders": [
-                                    otp,
-                                    "Sample Next App"
+                                    "Sample Next App",
+                                    otp
                                 ]
-                            },
-                            "buttons": [
-            {"type":"QUICK_REPLY", "parameter":"I Consent"}
-          ]
+                            }
                         },
-                        "language": "en"
+                        "language": "en_GB"
                     },
                 }
             ]

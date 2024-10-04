@@ -29,7 +29,7 @@ async function sendTestLoginEamil(email: string, ip: string) {
     console.log("City: ", city);
     console.log("Country: ", country);
     body = `Your account was logged in from the IP 
-    address ${ip} in ${city}, ${country}. ISP is ${org}. Coordinates ${loc}`;
+    address ${ip} in ${city}, ${country}. ISP is ${org}. Coordinates ${loc}. Your IP and location info are NOT STORED they are only used for your info.`;
 
   } catch (e) {
     console.error(e);
