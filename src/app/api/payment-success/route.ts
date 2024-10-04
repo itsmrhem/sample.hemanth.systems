@@ -22,7 +22,7 @@ async function sendEmail(email: string, subject: string, body: string) {
           to: [{address: to}],
       }
   };
-  client.beginSend(message);
+  await client.beginSend(message);
 }
 
 export async function POST(request: NextRequest) {

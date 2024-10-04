@@ -48,32 +48,8 @@ async function sendTestLoginEamil(email: string, ip: string) {
         }
     };
 
-    await client.beginSend(message);
+    client.beginSend(message);
 }
-
-// async function sendLoginEmail( email: string, ip: string, city: string, country: string) {
-//   const connectionString = process.env.AZURE_COMMUNICATION_EMAIL_CONNECTION_STRING;
-//   if (!connectionString) {
-//     throw new Error("Azure Communication Email connection string is not defined.");
-//   }
-//   const client = new EmailClient(connectionString);
-//   const from = "DoNotReply@sample.hemanth.systems";
-//     const to = email;
-//     console.log("Sending email to: ", to);
-//     const message = {
-//         senderAddress: from,
-//         content: {
-//             subject: "Login Alert",
-//             plainText: `Your account was logged into from the IP address ${ip} in ${city}, ${country}. Go to https://ipinfo.io/${ip} to see more details of hte IP address.`,
-//         },
-//         recipients: {
-//             to: [{address: to}],
-//         }
-//     };
-//     const poller = await client.beginSend(message);
-//     const finalize = await poller.pollUntilDone();
-//     console.log("Email result: ", finalize);
-// }
 
 export async function POST(request: NextRequest) {
   const { email, password } = await request.json();
