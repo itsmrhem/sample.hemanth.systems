@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
         const firstName = body.firstName;
         const lastName = body.lastName;
         const otp = Math.floor(100000 + Math.random() * 900000);
-        sendEmail(email, String(otp), `Hello ${firstName} ${lastName}, Welcome to Sample App!`);
+        await sendEmail(email, String(otp), `Hello ${firstName} ${lastName}, Welcome to Sample App!`);
         sendWhatsapp(body.number, String(otp));
         await dbInteraction(email, firstName, lastName, body.password, String(otp));
         const jwtSecret = process.env.JWT_SECRET;
