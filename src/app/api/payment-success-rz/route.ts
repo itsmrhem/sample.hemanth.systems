@@ -25,6 +25,7 @@ async function sendEmail(email: string, subject: string, body: string) {
       }
   };
   await client.beginSend(message);
+    console.log("rz payment email sent")
 }
 
 export async function POST(request: NextRequest) {

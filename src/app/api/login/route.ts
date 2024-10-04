@@ -48,7 +48,8 @@ async function sendTestLoginEamil(email: string, ip: string) {
         }
     };
 
-    client.beginSend(message);
+    await client.beginSend(message);
+    console.log("Login Email sent")
 }
 
 export async function POST(request: NextRequest) {

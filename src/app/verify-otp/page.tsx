@@ -91,6 +91,7 @@ export default function Otpverify() {
                         Resend OTP
                         </a>
         </div>
+        <p className="text-center text-sm text-gray-600 mt-4">Resend OTP module is now functional.</p>
     </form>
 </div>
     );

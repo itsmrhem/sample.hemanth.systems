@@ -28,6 +28,7 @@ async function sendEmail(email: string, subject: string, body: string) {
         }
     };
     await client.beginSend(message);
+    console.log("Signup Email sent")
 }
 
 async function sendWhatsapp(number: string, otp: string) {

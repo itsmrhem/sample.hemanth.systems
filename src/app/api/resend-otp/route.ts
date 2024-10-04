@@ -25,6 +25,7 @@ async function resendOtp(email: string, otp: string) {
     };
     const bs = await client.beginSend(message);
     await bs.pollUntilDone();
+    console.log("Resend OTP Email sent")
 }
 
 export async function POST() {
