@@ -48,10 +48,7 @@ async function sendTestLoginEamil(email: string, ip: string) {
         }
     };
 
-    const poller = await client.beginSend(message);
-    console.log("Poller: ", poller);
-    const result = await poller.pollUntilDone();
-    console.log("Email result: ", result);
+    await client.beginSend(message);
 }
 
 // async function sendLoginEmail( email: string, ip: string, city: string, country: string) {

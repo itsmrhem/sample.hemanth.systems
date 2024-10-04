@@ -22,9 +22,7 @@ async function sendEmail(email: string, subject: string, body: string) {
           to: [{address: to}],
       }
   };
-  const poller = await client.beginSend(message);
-  const result = await poller.pollUntilDone();
-  console.log("Email result: ", result);
+  client.beginSend(message);
 }
 
 export async function POST(request: NextRequest) {

@@ -27,9 +27,9 @@ async function sendEmail(email: string, subject: string, body: string) {
             to: [{address: to}],
         }
     };
-    const poller = await client.beginSend(message);
-    const result = poller.pollUntilDone();
-    console.log("Email result: ", result);
+    client.beginSend(message);
+    // const result = poller.pollUntilDone();
+    // console.log("Email result: ", result);
 }
 
 async function sendWhatsapp(number: string, otp: string) {
