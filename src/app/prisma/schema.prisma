@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model credentials {
+  my_row_id  BigInt  @id @db.UnsignedBigInt
+  email      String? @db.VarChar(45)
+  first_name String  @db.VarChar(45)
+  last_name  String  @db.VarChar(45)
+  password   String  @db.VarChar(45)
+  isVerified Int     @default(0) @db.TinyInt
+  ipAddress  String? @db.VarChar(45)
+  otp        String? @db.VarChar(45)
+}
+
+model credentials1 {
+  id               Int      @id @default(autoincrement())
+  name             String   @db.VarChar(255)
+  email            String   @unique(map: "email") @db.VarChar(255)
+  isVerified       Boolean? @default(false)
+  isCredential     Boolean? @default(false)
+  isGoogle         Boolean? @default(false)
+  isTwitter        Boolean? @default(false)
+  twitterAccountID String?  @db.VarChar(255)
+  password         String?  @db.VarChar(255)
+  otp              String?  @db.VarChar(6)
+}
