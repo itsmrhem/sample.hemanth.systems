@@ -68,7 +68,7 @@ const paymentPage = () => {
         const firstname = session?.user?.name ?? "" ;
         const lastname = ""; 
         const email = session?.user?.email ?? ""; //?? because twitter login doesn't return email. TODO: after fixing the twitter email issue, remove this.
-        const surl = "http://sample.hemanth.systems/api/payment-success";
+        const surl = "https://sample.hemanth.systems/api/payment-success";
         const furl = "https://sample.hemanth.systems/api/payment-failure";
         const phone = "9988776655"; 
         const hash = generateHash(key, txnid, amount, productinfo, firstname, email); 
@@ -126,7 +126,7 @@ const paymentPage = () => {
                 name: "Sample App",
                 order_id: data.orderId,
                 description: "Payment for Sample App",
-                callback_url: "http://sample.hemanth.systems/api/payment-success-rz",
+                callback_url: "https://sample.hemanth.systems/api/payment-success-rz",
                 theme: {
                     color: "#3a88fe",
                 },
