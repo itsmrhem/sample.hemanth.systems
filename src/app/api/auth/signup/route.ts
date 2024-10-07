@@ -17,13 +17,16 @@ export async function POST(req: Request) {
     const user = {
       name: name,
       email: email,
-      password: password
+      password: password,
+      isCredential: true,
+      isVerified: true //SECURITY FLAW: Using true for testing purpose. only set this to true post email verification
     }
     //todo email verification
     console.log("Creating user cred provider")
     await createUser(user)
     return NextResponse.json({ message: 'User created successfully' }, { status: 200 }) 
   } catch (error) {
+    console.log(error)
     return NextResponse.json({ error: 'Error creating user' }, { status: 500 })
   }
 }

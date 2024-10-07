@@ -1,7 +1,11 @@
 "use client";
 
+
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react"
 import crypto from "crypto";
+import LoadingSpinner from "@/components/Loading";
+
 
 declare global {
     interface Window {
@@ -10,20 +14,11 @@ declare global {
 }
 
 const paymentPage = () => {
+    const { data: session, status } = useSession()
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('Razorpay');
-    const [email, setEmail] = useState('');
+    const [isProcessing, setIsProcessing] = useState(false);
 
     useEffect(() => {
-        fetch('/api/get-email')
-            .then(response => response.json())
-            .then(data => {
-                if (data.email) {
-                    setEmail(data.email);
-                } else {
-                    console.error('Failed to fetch email');
-                }
-            })
-            .catch(error => console.error('Error fetching email:', error));
             const script = document.createElement('script');
             script.src = 'https://checkout.razorpay.com/v1/checkout.js';
             script.async = true;
@@ -35,6 +30,10 @@ const paymentPage = () => {
             };
             document.body.appendChild(script);
     }, []);
+
+    if (status === 'loading') {
+        return <LoadingSpinner />;
+    }
 
     const radios = [
         {
@@ -52,10 +51,9 @@ const paymentPage = () => {
     ]
     const amount = 100;
     
-    const [isProcessing, setIsProcessing] = useState(false);
+    
 
-    function generateHash(key: string, txnid: string, amount: string, productinfo: string, firstname: string) {
-        // replace salt with env
+    function generateHash(key: string, txnid: string, amount: string, productinfo: string, firstname: string, email: string) {
         const input = `${key}|${txnid}|${amount}|${productinfo}|${firstname}|${email}|||||||||||${process.env.NEXT_PUBLIC_PAYU_SALT}`;
         return crypto.createHash('sha512').update(input).digest('hex');
     }
@@ -63,17 +61,17 @@ const paymentPage = () => {
     const handlePayUPayment = () => {
         console.log("PayU payment", process.env.PAYU_KEY);
         setIsProcessing(true);
-        // replace key with env
         const key = process.env.NEXT_PUBLIC_PAYU_KEY!; 
         const txnid = "receipt_"+Math.random().toString(36).substring(7); 
         const productinfo = "Sample App"; 
         const amount = "100"; 
-        const firstname = "Hemanth"; 
-        const lastname = "Marupudi"; 
-        const surl = "https://sample.hemanth.systems/api/payment-success";
+        const firstname = session?.user?.name ?? "" ;
+        const lastname = ""; 
+        const email = session?.user?.email ?? ""; //?? because twitter login doesn't return email. TODO: after fixing the twitter email issue, remove this.
+        const surl = "http://sample.hemanth.systems/api/payment-success";
         const furl = "https://sample.hemanth.systems/api/payment-failure";
         const phone = "9988776655"; 
-        const hash = generateHash(key, txnid, amount, productinfo, firstname); 
+        const hash = generateHash(key, txnid, amount, productinfo, firstname, email); 
         console.log(key, process.env.NEXT_PUBLIC_PAYU_SALT!);
         const form = document.createElement("form");
         form.action = "https://test.payu.in/_payment";
@@ -90,6 +88,7 @@ const paymentPage = () => {
             lastname,
             surl,
             furl,
+            email,
             phone,
             hash
         };
@@ -127,10 +126,14 @@ const paymentPage = () => {
                 name: "Sample App",
                 order_id: data.orderId,
                 description: "Payment for Sample App",
-                callback_url: "https://sample.hemanth.systems/api/payment-success-rz",
+                callback_url: "http://sample.hemanth.systems/api/payment-success-rz",
                 theme: {
                     color: "#3a88fe",
                 },
+                prefill: {
+                    name: session?.user?.name,
+                    email: session?.user?.email ?? "",
+                }
             };
             console.log("Options: ", options);
             const rzp1 = new window.Razorpay(options);
@@ -143,6 +146,7 @@ const paymentPage = () => {
         }
     };
     return (
+
         <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         <script src="https://checkout.razorpay.com/v1/checkout.js"/>
         <h1 className="text-lg sm:text-4xl font-bold text-center sm:text-left">Your total is 100₹. </h1>

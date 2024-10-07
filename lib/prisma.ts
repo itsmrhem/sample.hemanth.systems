@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 export default prisma;
 
 interface User {
-    name?: string;
+    name: string;
     email: string;
     isVerified?: boolean;
     isCredential?: boolean;
@@ -17,9 +17,10 @@ interface User {
   }
 
 export async function createUser(user: User) { 
+    console.log(user);
         return await prisma.credentials1.create({
             data: {
-                name: user.name , 
+                name: user.name, 
                 email: user.email,
                 isVerified: user.isVerified ?? false, 
                 isCredential: user.isCredential ?? false,
@@ -38,3 +39,20 @@ export async function getUserByEmail(email: string) {
     });
 }
 
+
+export async function updateUserByEmail(email: string, user: Partial<User>) {
+    const data: Partial<User> = {};
+    if (user.name !== undefined) data.name = user.name;
+    if (user.isVerified !== undefined) data.isVerified = user.isVerified;
+    if (user.isCredential !== undefined) data.isCredential = user.isCredential;
+    if (user.isGoogle !== undefined) data.isGoogle = user.isGoogle;
+    if (user.isTwitter !== undefined) data.isTwitter = user.isTwitter;
+    if (user.twitterAccountID !== undefined) data.twitterAccountID = user.twitterAccountID;
+    if (user.password !== undefined) data.password = user.password;
+    if (user.otp !== undefined) data.otp = user.otp;
+  
+    return await prisma.credentials1.update({
+      where: { email: email },
+      data: data,
+    })
+}

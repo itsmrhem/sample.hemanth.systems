@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import Twitter from "next-auth/providers/twitter";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { createUser, getUserByEmail } from "../../../../../lib/prisma";
+import { createUser, getUserByEmail, updateUserByEmail } from "../../../../../lib/prisma";
 
 const handler = NextAuth({
   providers: [
@@ -80,16 +80,38 @@ const handler = NextAuth({
             console.log("ggl usr create trying")
             await createUser(newUser);
             console.log("Google User created")
+            //todo: send welcome email for ggl user here
+            return true
           } catch (error) {
             console.log("Error creating Google User")
             console.log(error)
             return false
           }
-          //todo: send welcome email for ggl user here
+          
         } 
         else {
-          console.log("ggl user exists")
-          //todo: send login alert email here
+          console.log("user exists ggl sso login")
+          console.log("ggl user checking how the method of sign up sso or creds")
+          if (!existingUser.isGoogle) {
+            console.log("ggl user. using sign in with google but signed up with other")
+            try { 
+              console.log("will try to link the google account with the other account")
+              const updateUser = {
+                isGoogle: true
+              }
+              await updateUserByEmail(user.email, updateUser)
+              console.log("ggl user isGoogle updated successfully")
+
+              return true
+            } catch (error) {
+              console.log("ggl user error while updating isGoogle column", error)
+              return false
+            }
+          }
+          console.log("ggl user. already signed up with google no hassle")
+          console.log("approved sign in for ggl user")
+          return true
+
         }
       } else if (account.provider == "twitter") {
         console.log("twit user")
